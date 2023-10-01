@@ -74,10 +74,10 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt')
-    if(jwt) {
-      authApi.checkToken(jwt)
-        .then(res => {
+   const token = localStorage.getItem('token')
+    if(token) {
+      authApi.checkToken(token)
+       .then(res => {
             setEmail(res.email)
             setIslogedIn(true)
             navigate('/')
@@ -87,31 +87,39 @@ function App() {
   }, [])
 
   function handleLogin(password, email) {
+    setIsLoading(true)
     authApi.login(password, email)
       .then(res => {
-        if(res.jwt) {
-          localStorage.setItem('jwt', res.jwt)
+        if(res.token) {
+          localStorage.setItem('token', res.token)
           setEmail(email)
           setIslogedIn(true)
           navigate('/')
         }
     })
-    .catch(err => console.log(`Ошибка при авторизации пользователя ${err}`))
-    setTooltip(true)
-    setStatus(false)
+      .catch(err => {console.log(`Ошибка при авторизации пользователя ${err}`)
+      setTooltip(true)
+      setStatus(false)
+    })
+    .finally(() => setIsLoading(false))
   }
 
   function handleRegister(password, email) {
+    setIsLoading(true)
     authApi.register(password, email)
       .then(() => {
         setTooltip(true)
         setStatus(true)
     })
-    .catch(err => console.log(`Ошибка при регистрации пользователя ${err}`))
+    .catch(err => {console.log(`Ошибка при регистрации пользователя ${err}`)
+      setTooltip(true)
+      setStatus(false)
+    })
+    .finally(() => setIsLoading(false))
   }
 
   function handleLogout() {
-    localStorage.removeItem('jwt')
+    localStorage.removeItem('token')
     setIslogedIn(false)
   }
 
@@ -206,18 +214,18 @@ function App() {
               cards = { cards } /> } 
             />
             <Route path="/sign-in"
-              element = {<Login 
+              element = { <Login 
               onLogin = { handleLogin }
               isOpen = { tooltip }
-              onClose = { closeAllPopups }
-              status = { status } /> }
+              isLoading = { isLoading }
+              onClose = { closeAllPopups } /> }
             />
             <Route path="/sign-up"
-              element = {<Register
+              element = { <Register
+              isLoading = { isLoading }
               onRegister = {handleRegister}
               isOpen = { tooltip }
-              onClose = { closeAllPopups }
-              status = { status } /> }
+              onClose = { closeAllPopups } /> }
             />
           </Routes>
           <Footer/>

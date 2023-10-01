@@ -25,7 +25,7 @@ export function Login(props) {
             <form className="auth__form" onSubmit = { handleSubmit }>
                 <input className="auth__input" name="email"  onChange = { handleEmail } value = { email || '' } type="email" placeholder="Email"/>
                 <input className="auth__input" name="password" onChange = { handlePassword } value = { password || '' } type="password" placeholder="Пароль" />
-                <button className="auth__submit" type="submit" aria-label="Entarnce">Войти</button>
+                <button className="auth__submit" type="submit" aria-label="Entarnce">{ props.isLoading ? 'Войти...' : 'Войти' }</button>
             </form>
         </div>
     )

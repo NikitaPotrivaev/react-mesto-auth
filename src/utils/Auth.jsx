@@ -11,12 +11,12 @@ class Auth {
         }
     }
 
-    checkToken(jwt) {
+    checkToken(token) {
         return fetch(`${this._BASE_URL}/users/me`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt}`
+                'Authorization': `Bearer ${token}`
             }
         })
         .then(this._checkRequest)

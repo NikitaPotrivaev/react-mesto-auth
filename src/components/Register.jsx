@@ -27,7 +27,7 @@ return(
             <form className="auth__form" onSubmit = { handleSubmit }>
                 <input className="auth__input" name="email" onChange = { handleEmail } value = { email || '' } type="email" placeholder="Email"/>
                 <input className="auth__input" name="password" onChange = { handlePassword } value={ password || '' } type="password" placeholder="Пароль" />
-                <button className="auth__submit" type="submit" aria-label="Register">Зарегистрироваться</button>
+                <button className="auth__submit" type="submit" aria-label="Register">{ props.isLoading ? 'Зарегистрироваться...' : 'Зарегистрироваться' }</button>
             </form>
             <div className="auth__register">
                 <p className="auth__register-question">Уже зарегистрированы?</p>
