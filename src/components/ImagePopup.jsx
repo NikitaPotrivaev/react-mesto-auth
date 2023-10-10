@@ -1,4 +1,20 @@
+import { useEffect } from "react"
+
 export function ImagePopup(props) {
+
+  useEffect(() => {
+    if (!props.isOpen) return;
+    
+    function handleESC(e) {
+      if (e.key === "Escape") {
+        props.onClose()
+      }
+    }
+    document.addEventListener("keydown", handleESC);
+
+    return () => document.removeEventListener("keydown", handleESC);
+  }, [props.isOpen]);
+    
     return(
         <div className={ `popup popup_zoom_active ${ props.isOpen ? 'popup_opened' : '' }`}>
             <div className="popup__zoom-container">

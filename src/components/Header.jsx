@@ -7,7 +7,7 @@ export function Header(props) {
     <header className="header">
         <img src={logo} alt="Место" className="header__logo"/>
         <div className="header__member-zone">
-            { props.isLogedIn ? (
+            { props.isLoggedIn ? (
                 <>
                     <p className="header__email">{ props.email }</p>
                     <Link to='/sign-in' className="header__menu" onClick={ props.isLogout }>Выйти</Link>

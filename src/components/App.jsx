@@ -2,7 +2,7 @@ import { Header } from "./Header"
 import { Main } from "./Main"
 import { Footer } from "./Footer"
 import { useEffect, useState } from "react"
-import { useNavigate, Route, Routes } from "react-router-dom"
+import { useNavigate, Route, Routes, Navigate } from "react-router-dom"
 import { EditAvatarPopup } from "./EditAvatarPopup"
 import { EditProfilePopup } from "./EditProfilePopup"
 import { AddPlacePopup } from "./AddPlacePopup"
@@ -26,8 +26,8 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({})
   const [cards, setCards] = useState([])
   const [currentUser, setCurrentUser] = useState({})
-  const [email, setEmail] = useState(false)
-  const [isLogedIn, setIslogedIn] = useState(false)
+  const [email, setEmail] = useState('')
+  const [isLoggedIn, setIsloggedIn] = useState(false)
   const [status, setStatus] = useState(false)
   const [tooltip, setTooltip] = useState(false)
 
@@ -65,13 +65,15 @@ function App() {
   }
 
   useEffect(() => {
+    if (isLoggedIn) {
     Promise.all([ api.getUserInfo(), api.getCardList() ])
       .then(([ userInfo, cardData ]) => {
         setCurrentUser(userInfo)
         setCards(cardData)
       })
       .catch(err => console.log(`Сервер не нашёл данные, ${err}`))
-  }, [])
+    }
+  }, [isLoggedIn])
 
   useEffect(() => {
    const token = localStorage.getItem('token')
@@ -79,7 +81,7 @@ function App() {
       authApi.checkToken(token)
        .then(res => {
             setEmail(res.email)
-            setIslogedIn(true)
+            setIsloggedIn(true)
             navigate('/')
         })
       .catch(err => console.log(`Ошибка при обработке токена, ${err}`))
@@ -93,10 +95,10 @@ function App() {
         if(res.token) {
           localStorage.setItem('token', res.token)
           setEmail(email)
-          setIslogedIn(true)
+          setIsloggedIn(true)
           navigate('/')
         }
-    })
+      })
       .catch(err => {console.log(`Ошибка при авторизации пользователя ${err}`)
       setTooltip(true)
       setStatus(false)
@@ -120,7 +122,7 @@ function App() {
 
   function handleLogout() {
     localStorage.removeItem('token')
-    setIslogedIn(false)
+    setIsloggedIn(false)
   }
 
   function handleCardLike(card) {
@@ -148,9 +150,9 @@ function App() {
       .then((res) => {
         setCurrentUser(res)
         closeAllPopups()
-        })
-        .catch(err => console.log(`Ошибка при редактировании профиля, ${err}`))
-        .finally(() => setIsLoading(false))
+      })
+      .catch(err => console.log(`Ошибка при редактировании профиля, ${err}`))
+      .finally(() => setIsLoading(false))
   }
 
   function handleUpdateAvatar(url) {
@@ -175,36 +177,21 @@ function App() {
       .finally(() => setIsLoading(false))
   }
 
-  useEffect(() => {
-    document.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape') {
-        closeAllPopups()
-      }
-    })
-  }, [])
-
-  useEffect(() => {
-    document.addEventListener('mousedown', (e) => {
-      if(e.target.classList.contains('popup_opened') || e.target.classList.contains('popup__close')) {
-        closeAllPopups()
-      }
-    })
-  }, [])
-
   return (
     <CurrentUserContext.Provider value={ currentUser }>
       <div className="content">
         <div className="page">
           <Header
-            isLogedIn = { isLogedIn }
+            isLoggedIn = { isLoggedIn }
             email = { email }
             isLogout = { handleLogout }
           />
+          {!isLoggedIn && <Navigate to='/sign-in'/>}
           <Routes>
             <Route path='/'
               element = { <ProtectedRoute
               element = { Main }
-              isLogedIn = { isLogedIn }
+              isLoggedIn = { isLoggedIn }
               onEditAvatar = { handleEditAvatarClick }
               onEditProfile = { handleEditProfileClick }
               onAddPlace = { handleAddPlaceClick }
@@ -260,6 +247,7 @@ function App() {
             isLoading = { isLoading }
           />
           <InfoTooltip
+            text = { isLoggedIn ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.' }
             isOpen = { tooltip }
             onClose = { closeAllPopups }
             status = { status }
