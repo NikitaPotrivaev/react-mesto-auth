@@ -2,7 +2,7 @@ import { Header } from "./Header"
 import { Main } from "./Main"
 import { Footer } from "./Footer"
 import { useEffect, useState } from "react"
-import { useNavigate, Route, Routes, Navigate } from "react-router-dom"
+import { useNavigate, Route, Routes } from "react-router-dom"
 import { EditAvatarPopup } from "./EditAvatarPopup"
 import { EditProfilePopup } from "./EditProfilePopup"
 import { AddPlacePopup } from "./AddPlacePopup"
@@ -112,6 +112,7 @@ function App() {
       .then(() => {
         setTooltip(true)
         setStatus(true)
+        navigate('/sign-in')
     })
     .catch(err => {console.log(`Ошибка при регистрации пользователя ${err}`)
       setTooltip(true)
@@ -177,6 +178,14 @@ function App() {
       .finally(() => setIsLoading(false))
   }
 
+  useEffect(() => {
+    document.addEventListener('mousedown', (e) => {
+      if(e.target.classList.contains('popup_opened') || e.target.classList.contains('popup__close')) {
+        closeAllPopups()
+      }
+    })
+  }, [])
+
   return (
     <CurrentUserContext.Provider value={ currentUser }>
       <div className="content">
@@ -186,7 +195,6 @@ function App() {
             email = { email }
             isLogout = { handleLogout }
           />
-          {!isLoggedIn && <Navigate to='/sign-in'/>}
           <Routes>
             <Route path='/'
               element = { <ProtectedRoute

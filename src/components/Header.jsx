@@ -12,7 +12,7 @@ export function Header(props) {
                     <p className="header__email">{ props.email }</p>
                     <Link to='/sign-in' className="header__menu" onClick={ props.isLogout }>Выйти</Link>
                 </>
-            ) : ( 
+            ) : (
                 <>
                 <Routes>
                     <Route path="/sign-up" element = {<Link to="/sign-in" className="header__menu">Войти</Link>} />
