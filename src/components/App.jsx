@@ -2,7 +2,7 @@ import { Header } from "./Header"
 import { Main } from "./Main"
 import { Footer } from "./Footer"
 import { useEffect, useState } from "react"
-import { useNavigate, Route, Routes } from "react-router-dom"
+import { useNavigate, Route, Routes, Navigate } from "react-router-dom"
 import { EditAvatarPopup } from "./EditAvatarPopup"
 import { EditProfilePopup } from "./EditProfilePopup"
 import { AddPlacePopup } from "./AddPlacePopup"
@@ -196,6 +196,9 @@ function App() {
             isLogout = { handleLogout }
           />
           <Routes>
+            <Route path="*"
+              element = { !isLoggedIn && <Navigate to='/sign-in'/> }
+            />
             <Route path='/'
               element = { <ProtectedRoute
               element = { Main }
