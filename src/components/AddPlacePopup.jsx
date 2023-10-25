@@ -1,19 +1,18 @@
 import { PopupWithForm } from "./PopupWithForm";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "../hooks/useForm";
 
 export function AddPlacePopup(props) {
 
-   const [name, setName] = useState('')
-   const [link, setLink] = useState('')
+   const { values, handleChange, resetForm, errors, isValid } = useForm()
 
    useEffect(() => {
-    setName('')
-    setLink('')
+    resetForm()
    }, [props.isOpen])
 
    function handleSubmit(e) {
     e.preventDefault()
-    props.onAddPlace(name, link)
+    props.onAddPlace(values.name, values.link)
    }
 
     return(
@@ -21,14 +20,16 @@ export function AddPlacePopup(props) {
         isOpen = { props.isOpen }
         onClose = { props.onClose }
         onSubmit = { handleSubmit }
+        isValid = { isValid }
+        isDisabled = { !isValid || props.isLoading }
         title = 'Новое место'
         name = 'mesto'
         buttonText = { props.isLoading ? 'Сохранение...' : 'Создать' }
     >
-        <input name="cards" className="popup__edit popup__edit_margin" value={ name || '' } onChange={ e => setName(e.target.value) } type="text" placeholder="Название" minLength="2" maxLength="30" required/>
-            <span id="cards-error" className="popup__error popup__error_active"></span>
-        <input name="link" className="popup__edit" value={ link || '' } onChange={ e => setLink(e.target.value) } type="url" placeholder="Ссылка на картинку" required/>
-            <span id="link-error" className="popup__error popup__error_active"></span>
+        <input name="name" className="popup__edit popup__edit_margin" value={ values.name || '' } onChange={ handleChange } type="text" placeholder="Название" minLength="2" maxLength="30" required/>
+            <span id="name-error" className="popup__error popup__error_active">{ errors.name || "" }</span>
+        <input name="link" className="popup__edit" value={ values.link || '' } onChange={ handleChange } type="url" placeholder="Ссылка на картинку" required/>
+            <span id="link-error" className="popup__error popup__error_active">{ errors.link || "" }</span>
     </PopupWithForm>
     )
 }

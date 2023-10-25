@@ -20,6 +20,12 @@ export function InfoTooltip(props) {
         return () => document.removeEventListener("keydown", handleESC);
     }, [props.isOpen]);
 
+    const handleOverlayClose = (e) => {
+        if (e.target === e.currentTarget && props.isOpen) {
+          props.onClose();
+        }
+      }
+
     function redirect() {
         if(props.status) {
             props.onClose()
@@ -31,7 +37,7 @@ export function InfoTooltip(props) {
     }
 
     return(
-        <div className={ `popup ${props.isOpen ? 'popup_opened' : ''}` }>
+        <div className={ `popup ${props.isOpen ? 'popup_opened' : ''}` } onMouseDown={handleOverlayClose}>
             <div className="popup__container">
                 <button className="popup__close" onClick = { redirect } type="button" aria-label="Закрыть форму" />
                 <div className="auth__status">

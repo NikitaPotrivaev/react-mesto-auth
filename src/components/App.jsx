@@ -79,8 +79,7 @@ function App() {
    const token = localStorage.getItem('token')
     if(token) {
       authApi.checkToken(token)
-       .then(res => {
-            setEmail(res.email)
+       .then(() => {
             setIsloggedIn(true)
             navigate('/')
         })
@@ -92,12 +91,10 @@ function App() {
     setIsLoading(true)
     authApi.login(password, email)
       .then(res => {
-        if(res.token) {
           localStorage.setItem('token', res.token)
           setEmail(email)
           setIsloggedIn(true)
           navigate('/')
-        }
       })
       .catch(err => {console.log(`Ошибка при авторизации пользователя ${err}`)
       setTooltip(true)
@@ -177,14 +174,6 @@ function App() {
       .catch(err => console.log(`Ошибка при создании карточки, ${err}`))
       .finally(() => setIsLoading(false))
   }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', (e) => {
-      if(e.target.classList.contains('popup_opened') || e.target.classList.contains('popup__close')) {
-        closeAllPopups()
-      }
-    })
-  }, [])
 
   return (
     <CurrentUserContext.Provider value={ currentUser }>

@@ -14,9 +14,15 @@ export function ImagePopup(props) {
 
     return () => document.removeEventListener("keydown", handleESC);
   }, [props.isOpen]);
+
+  const handleOverlayClose = (e) => {
+    if (e.target === e.currentTarget && props.isOpen) {
+      props.onClose();
+    }
+  }
     
     return(
-        <div className={ `popup popup_zoom_active ${ props.isOpen ? 'popup_opened' : '' }`}>
+        <div className={ `popup popup_zoom_active ${ props.isOpen ? 'popup_opened' : '' }`} onMouseDown={handleOverlayClose}>
             <div className="popup__zoom-container">
                 <img src={ props.card.link } className="popup__image" alt={ props.card.name }/>
                 <button type="button" className="popup__close" aria-label="Закрыть" onClick={ props.onClose }></button>
