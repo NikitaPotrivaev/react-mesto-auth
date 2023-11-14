@@ -8,7 +8,7 @@ export function AddPlacePopup(props) {
 
    useEffect(() => {
     resetForm()
-   }, [props.isOpen])
+   }, [resetForm, props.isOpen])
 
    function handleSubmit(e) {
     e.preventDefault()

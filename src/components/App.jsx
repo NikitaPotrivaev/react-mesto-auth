@@ -79,13 +79,14 @@ function App() {
    const token = localStorage.getItem('token')
     if(token) {
       authApi.checkToken(token)
-       .then(() => {
+       .then((res) => {
+            setEmail(res.data.email)
             setIsloggedIn(true)
             navigate('/')
         })
       .catch(err => console.log(`Ошибка при обработке токена, ${err}`))
     }
-  }, [])
+  }, [isLoggedIn])
 
   function handleLogin(password, email) {
     setIsLoading(true)

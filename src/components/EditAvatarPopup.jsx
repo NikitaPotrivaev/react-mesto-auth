@@ -11,7 +11,7 @@ export function EditAvatarPopup(props) {
     useEffect(() => {
         ref.current.value = ''
         resetForm()
-    }, [props.isOpen])
+    }, [resetForm, props.isOpen])
 
     function handleSubmit(e) {
         e.preventDefault();
